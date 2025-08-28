@@ -16,4 +16,6 @@ public interface CatalogoLocadorRepository extends JpaRepository<CatalogoLocador
 
     Optional<CatalogoLocador> findByLocadorAndObra(Usuario locador, Obra obra);
 
+    List<CatalogoLocador> findByEstoqueGreaterThan(Integer estoque);
+
 }

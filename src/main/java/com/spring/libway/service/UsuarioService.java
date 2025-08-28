@@ -7,4 +7,6 @@ public interface UsuarioService extends UserDetailsService {
 
     Usuario salvarUsuario(Usuario usuario);
 
+    Usuario getUsuarioLogado();
+
 }

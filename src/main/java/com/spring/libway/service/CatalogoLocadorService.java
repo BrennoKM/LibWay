@@ -10,4 +10,6 @@ public interface CatalogoLocadorService {
 
     List<CatalogoLocador> listarCatalogoDoLocadorLogado();
 
+    List<CatalogoLocador> listarItensDisponiveisParaAluguel();
+
 }
