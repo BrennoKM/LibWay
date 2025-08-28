@@ -80,7 +80,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Método de Pagamento</label>
-                        <select name="metodo" class="form-select">
+                        <select name="metodoPagamento" class="form-select">
                             <option value="PIX">PIX</option>
                             <option value="CARTAO">Cartão de Crédito</option>
                             <option value="BOLETO">Boleto</option>

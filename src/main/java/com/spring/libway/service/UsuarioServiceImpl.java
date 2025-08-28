@@ -1,5 +1,6 @@
 package com.spring.libway.service;
 
+import com.spring.libway.enums.TipoUsuario;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -20,6 +22,11 @@ public class UsuarioServiceImpl extends BaseService implements UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public Usuario getUsuarioLogado() {
+        return super.getUsuarioLogado();
+    }
 
     @Override
     public Usuario salvarUsuario(Usuario usuario) {
@@ -48,7 +55,18 @@ public class UsuarioServiceImpl extends BaseService implements UsuarioService {
     }
 
     @Override
-    public Usuario getUsuarioLogado() {
-        return super.getUsuarioLogado();
+    public void adicionarSaldo(BigDecimal valor, String metodoPagamento) {
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        if (usuarioLogado.getTipoUsuario() != TipoUsuario.CLIENTE) {
+            throw new IllegalStateException("Apenas clientes podem adicionar saldo.");
+        }
+
+        String resultado = usuarioRepository.chamarFuncaoAdicionarSaldo(usuarioLogado.getId().intValue(), valor, metodoPagamento);
+
+        if (!"Saldo adicionado com sucesso!".equals(resultado)) {
+            throw new IllegalStateException(resultado);
+        }
     }
+
 }
