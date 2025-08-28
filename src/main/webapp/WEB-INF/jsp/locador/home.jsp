@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -11,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
+<jsp:include page="/WEB-INF/jsp/componentes/navbar.jsp" />
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Meu Catálogo Pessoal</h1>
@@ -19,7 +20,6 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastroObra">
                 Cadastrar Nova Obra Global
             </button>
-            <a href="/obras/lista" class="btn btn-secondary">Ver Catálogo Global para Adicionar</a>
         </div>
     </div>
 

@@ -54,6 +54,16 @@
                             </form:select>
                         </div>
 
+                        <div id="campoCpf" class="mb-3">
+                            <label for="cpf" class="form-label">CPF</label>
+                            <form:input path="cpf" cssClass="form-control" id="cpf" required="true"/>
+                        </div>
+
+                        <div id="campoCnpj" class="mb-3" style="display: none;">
+                            <label for="cnpj" class="form-label">CNPJ</label>
+                            <form:input path="cnpj" cssClass="form-control" id="cnpj" required="true"/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary w-100">Registrar</button>
 
                     </form:form>
@@ -62,6 +72,33 @@
         </div>
     </div>
 </div>
+
+<script>
+    const tipoUsuarioSelect = document.getElementById('tipoUsuario');
+    const campoCpf = document.getElementById('campoCpf');
+    const campoCnpj = document.getElementById('campoCnpj');
+
+    const inputCpf = document.getElementById('cpf');
+    const inputCnpj = document.getElementById('cnpj');
+
+    tipoUsuarioSelect.addEventListener('change', function() {
+        if (this.value === 'CLIENTE') {
+            campoCpf.style.display = 'block';
+            inputCpf.disabled = false;
+
+            campoCnpj.style.display = 'none';
+            inputCnpj.disabled = true;
+        } else if (this.value === 'LOCADOR') {
+            campoCpf.style.display = 'none';
+            inputCpf.disabled = true;
+
+            campoCnpj.style.display = 'block';
+            inputCnpj.disabled = false;
+        }
+    });
+
+    inputCnpj.disabled = true;
+</script>
 
 </body>
 </html>
