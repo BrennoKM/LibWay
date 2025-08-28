@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -21,6 +22,11 @@
                     <c:if test="${not empty errorMessage}">
                         <div class="alert alert-danger">
                             ${errorMessage}
+                        </div>
+                    </c:if>
+                    <c:if test="${param.error != null}">
+                        <div class="alert alert-danger">
+                            Email ou senha inválidos.
                         </div>
                     </c:if>
                     <form:form action="/registrar" method="post" modelAttribute="usuario">
