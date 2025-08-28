@@ -1,0 +1,49 @@
+package com.spring.libway.controller;
+
+import com.spring.libway.model.CatalogoLocador;
+import com.spring.libway.model.Obra;
+import com.spring.libway.service.CatalogoLocadorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.math.BigDecimal;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/locador")
+public class LocadorController {
+
+    @Autowired
+    private CatalogoLocadorService catalogoLocadorService;
+
+    @GetMapping("/home")
+    public String mostrarHomeLocador(Model model) {
+        List<CatalogoLocador> catalogoPessoal = catalogoLocadorService.listarCatalogoDoLocadorLogado();
+        model.addAttribute("catalogoPessoal", catalogoPessoal);
+        model.addAttribute("obra", new Obra());
+
+        return "locador/home";
+    }
+
+    @PostMapping("/catalogo/adicionar")
+    public String adicionarObraAoCatalogo(@RequestParam Long obraId,
+                                          @RequestParam Integer estoque,
+                                          @RequestParam BigDecimal valorAluguel,
+                                          RedirectAttributes redirectAttributes) {
+
+        try {
+            catalogoLocadorService.adicionarObraAoCatalogo(obraId, estoque, valorAluguel);
+            redirectAttributes.addFlashAttribute("successMessage", "Obra adicionada ao seu catálogo com sucesso!");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/obras/lista";
+    }
+}

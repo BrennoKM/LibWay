@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/obras")
@@ -26,18 +29,27 @@ public class ObraController {
     }
 
     @PostMapping("/cadastrar")
-    public String salvarObra(@ModelAttribute("obra") Obra obra, RedirectAttributes redirectAttributes) {
+    public String salvarObra(@ModelAttribute("obra") Obra obra, @RequestParam String originUrl, RedirectAttributes redirectAttributes) {
 
         try {
             obraService.salvarObra(obra);
             redirectAttributes.addFlashAttribute("successMessage", "Obra cadastrada com sucesso!");
 
-            return "redirect:/obras/listar";
+            return "redirect:" + originUrl;
 
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
 
             return "redirect:/obras/cadastrar";
         }
+    }
+
+    @GetMapping("/lista")
+    public String listarObras(Model model) {
+        List<Obra> obras = obraService.listarTodas();
+        model.addAttribute("obras", obras);
+        model.addAttribute("obra", new Obra());
+
+        return "obra/lista";
     }
 }
