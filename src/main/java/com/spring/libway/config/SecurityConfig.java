@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/obras/cadastrar").hasRole("LOCADOR")
+                        .requestMatchers("/obras/**").hasRole("LOCADOR")
                         .requestMatchers("/login", "/registrar", "/WEB-INF/jsp/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
