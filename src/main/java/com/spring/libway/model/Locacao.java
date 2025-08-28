@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
@@ -34,4 +36,27 @@ public class Locacao {
     private BigDecimal valorSinal;
 
     private BigDecimal valorFinal;
+
+    public String getDataLocacaoFormatada() {
+        if (this.dataLocacao == null) {
+            return "";
+        }
+        ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        return this.dataLocacao.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
+    }
+
+    public BigDecimal getValorTotalAluguel() {
+        if (this.valorSinal == null) {
+            return BigDecimal.ZERO;
+        }
+        return this.valorSinal.multiply(new BigDecimal("2"));
+    }
+
+    // valor final é igual ao inicial (50% do total)
+    public BigDecimal getValorRestante() {
+        return this.valorSinal;
+    }
+
 }

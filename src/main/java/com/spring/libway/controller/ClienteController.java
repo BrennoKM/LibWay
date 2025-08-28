@@ -4,13 +4,11 @@ import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.service.LocacaoService;
 import com.spring.libway.service.UsuarioService;
+import com.spring.libway.service.CatalogoLocadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -25,6 +23,9 @@ public class ClienteController {
 
     @Autowired
     private LocacaoService locacaoService;
+
+    @Autowired
+    private CatalogoLocadorService catalogoLocadorService;
 
     @GetMapping("/home")
     public String mostrarHomeCliente(Model model) {
@@ -48,6 +49,21 @@ public class ClienteController {
         }
 
         return "redirect:/cliente/home";
+    }
+
+    @GetMapping("/vitrine")
+    public String mostrarVitrine(Model model) {
+        model.addAttribute("itensDeCatalogo", catalogoLocadorService.listarItensDisponiveisParaAluguel());
+
+        return "cliente/vitrine";
+    }
+
+    @GetMapping("/locacao/{id}/detalhes")
+    @ResponseBody
+    public Locacao getDetalhesLocacao(@PathVariable Long id) {
+        Locacao locacao = locacaoService.buscarPorIdDoClienteLogado(id);
+
+        return locacao;
     }
 
 }
