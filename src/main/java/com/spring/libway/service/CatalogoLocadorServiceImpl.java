@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CatalogoLocadorServiceImpl implements CatalogoLocadorService {
+public class CatalogoLocadorServiceImpl extends BaseService implements CatalogoLocadorService {
 
     @Autowired
     private CatalogoLocadorRepository catalogoRepository;
@@ -55,17 +55,8 @@ public class CatalogoLocadorServiceImpl implements CatalogoLocadorService {
         return catalogoRepository.findByLocador(locador);
     }
 
-    private Usuario getUsuarioLogado() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userEmail;
-
-        if (principal instanceof UserDetails) {
-            userEmail = ((UserDetails) principal).getUsername();
-        } else {
-            userEmail = principal.toString();
-        }
-
-        return usuarioRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("Usuário logado não encontrado no banco de dados."));
+    @Override
+    public List<CatalogoLocador> listarItensDisponiveisParaAluguel() {
+        return catalogoRepository.findByEstoqueGreaterThan(0);
     }
 }

@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService {
+public class UsuarioServiceImpl extends BaseService implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -45,5 +45,10 @@ public class UsuarioServiceImpl implements UsuarioService {
                 usuario.getSenha(),
                 Collections.singletonList(() -> "ROLE_" + usuario.getTipoUsuario().name())
         );
+    }
+
+    @Override
+    public Usuario getUsuarioLogado() {
+        return super.getUsuarioLogado();
     }
 }
