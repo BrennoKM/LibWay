@@ -3,8 +3,13 @@ package com.spring.libway.service;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -21,5 +26,17 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setSenha(senhaCriptografada);
 
         return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + email));
+
+        return new User(
+                usuario.getEmail(),
+                usuario.getSenha(),
+                Collections.singletonList(() -> "ROLE_" + usuario.getTipoUsuario().name())
+        );
     }
 }
