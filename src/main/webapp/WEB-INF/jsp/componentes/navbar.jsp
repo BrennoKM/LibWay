@@ -21,7 +21,7 @@
 
                 <sec:authorize access="hasRole('CLIENTE')">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ver Vitrine</a>
+                        <a class="nav-link" href="/cliente/vitrine">Ver Vitrine</a>
                     </li>
                 </sec:authorize>
             </ul>

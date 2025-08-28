@@ -40,6 +40,8 @@
                     <th>Livro</th>
                     <th>Locador</th>
                     <th>Data do Aluguel</th>
+                    <th>Valor total</th>
+                    <th>Restante a pagar</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -48,9 +50,12 @@
                     <tr>
                         <td>${locacao.itemCatalogo.obra.titulo}</td>
                         <td>${locacao.itemCatalogo.locador.nome}</td>
-                        <td><fmt:formatDate value="${locacao.dataLocacao.toLocalDate()}" pattern="dd/MM/yyyy"/></td>
+                        <td>${locacao.getDataLocacaoFormatada()}</td>
+                        <td><fmt:formatNumber value="${locacao.getValorTotalAluguel()}" type="currency"/></td>
+                        <td><fmt:formatNumber value="${locacao.getValorRestante()}" type="currency"/></td>
                         <td>
-                            <button class="btn btn-sm btn-info">Ver Detalhes</button>
+                            <button class="btn btn-sm btn-info btn-detalhes" data-locacao-id="${locacao.id}" data-bs-toggle="modal" data-bs-target="#modalDetalhesLocacao">Ver Detalhes</button>
+                            <button class="btn btn-sm btn-success btn-ver-obra" data-locacao-id="${locacao.id}" data-bs-toggle="modal" data-bs-target="#modalDetalhesObra">Ver Obra</button>
                             <button class="btn btn-sm btn-warning">Devolver</button>
                         </td>
                     </tr>
@@ -93,6 +98,120 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalDetalhesLocacao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Locação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Locador:</strong> <span id="detalhesLocador"></span></p>
+                <p><strong>Data do Aluguel:</strong> <span id="detalhesDataAluguel"></span></p>
+                <p><strong>Valor Total:</strong> <span id="detalhesValorTotal"></span></p>
+                <p><strong>Valor do Sinal:</strong> <span id="detalhesValorSinal"></span></p>
+                <p><strong>Valor Restante:</strong> <span id="detalhesValorRestante"></span></p>
+                <p><strong>Status:</strong> <span id="detalhesStatus"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDetalhesObra" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloObra"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Autor:</strong> <span id="autorObra"></span></p>
+                <p><strong>Editora:</strong> <span id="editoraObra"></span></p>
+                <p><strong>ISBN:</strong> <span id="isbnObra"></span></p>
+                <hr>
+                <h4>Resumo Completo</h4>
+                <p id="resumoObra"></p>
+                <hr>
+                <h4>Sumário</h4>
+                <p id="sumarioObra"></p>
+                <hr>
+                <h4>Texto Completo</h4>
+                <p id="textoCompletoObra"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalDetalhesLocacao = new bootstrap.Modal(document.getElementById('modalDetalhesLocacao'));
+        const modalDetalhesObra = new bootstrap.Modal(document.getElementById('modalDetalhesObra'));
+        const locacoesCache = {};
+
+        document.querySelectorAll('.btn-detalhes, .btn-ver-obra').forEach(button => {
+            button.addEventListener('click', function() {
+                const locacaoId = this.getAttribute('data-locacao-id');
+                const isDetalhesBtn = this.classList.contains('btn-detalhes');
+
+                if (locacoesCache[locacaoId]) {
+                    fillModals(locacoesCache[locacaoId], isDetalhesBtn);
+                } else {
+                    fetch('/cliente/locacao/' + locacaoId + '/detalhes')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Locação não encontrada ou acesso negado.');
+                            }
+                            return response.json();
+                        })
+                        .then(locacao => {
+                            locacoesCache[locacaoId] = locacao;
+                            fillModals(locacao, isDetalhesBtn);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao buscar detalhes:', error);
+                            alert('Não foi possível carregar os detalhes do livro.');
+                        });
+                }
+            });
+        });
+
+        function fillModals(locacao, isDetalhesBtn) {
+            // Preenche o modal de detalhes da Locação
+            document.getElementById('detalhesLocador').textContent = locacao.itemCatalogo.locador.nome;
+            document.getElementById('detalhesDataAluguel').textContent = locacao.dataLocacaoFormatada;
+            document.getElementById('detalhesValorTotal').textContent = formatCurrency(locacao.valorTotalAluguel);
+            document.getElementById('detalhesValorSinal').textContent = formatCurrency(locacao.valorSinal);
+            document.getElementById('detalhesValorRestante').textContent = formatCurrency(locacao.valorRestante);
+            document.getElementById('detalhesStatus').textContent = locacao.status;
+
+            // Preenche o modal de detalhes da Obra
+            document.getElementById('tituloObra').textContent = locacao.itemCatalogo.obra.titulo;
+            document.getElementById('autorObra').textContent = locacao.itemCatalogo.obra.autor;
+            document.getElementById('editoraObra').textContent = locacao.itemCatalogo.obra.editora;
+            document.getElementById('isbnObra').textContent = locacao.itemCatalogo.obra.isbn;
+            document.getElementById('resumoObra').textContent = locacao.itemCatalogo.obra.resumoCompleto;
+            document.getElementById('sumarioObra').textContent = locacao.itemCatalogo.obra.sumario;
+            document.getElementById('textoCompletoObra').textContent = locacao.itemCatalogo.obra.textoCompleto;
+
+            if (isDetalhesBtn) {
+                modalDetalhesLocacao.show();
+            } else {
+                modalDetalhesObra.show();
+            }
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+    });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
