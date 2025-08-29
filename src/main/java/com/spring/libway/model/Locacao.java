@@ -1,6 +1,7 @@
 package com.spring.libway.model;
 
 import com.spring.libway.enums.StatusLocacao;
+import com.spring.libway.util.FormatadorDeData;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -38,23 +39,11 @@ public class Locacao {
     private BigDecimal valorFinal;
 
     public String getDataLocacaoFormatada() {
-        if (this.dataLocacao == null) {
-            return "";
-        }
-        ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
-
-        return this.dataLocacao.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
+        return FormatadorDeData.formatarParaBrasileiro(this.dataLocacao);
     }
 
     public String getDataDevolucaoFormatada() {
-        if (this.dataDevolucao == null) {
-            return "";
-        }
-        ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
-
-        return this.dataDevolucao.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
+        return FormatadorDeData.formatarParaBrasileiro(this.dataDevolucao);
     }
 
     public BigDecimal getValorTotalAluguel() {

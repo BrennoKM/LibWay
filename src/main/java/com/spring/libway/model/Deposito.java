@@ -1,5 +1,6 @@
 package com.spring.libway.model;
 
+import com.spring.libway.util.FormatadorDeData;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -30,11 +31,6 @@ public class Deposito {
     private OffsetDateTime dataDeposito;
 
     public String getDataDepositoFormatada() {
-        if (this.dataDeposito == null) {
-            return "";
-        }
-        ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
-        return this.dataDeposito.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
+        return FormatadorDeData.formatarParaBrasileiro(this.dataDeposito);
     }
 }
