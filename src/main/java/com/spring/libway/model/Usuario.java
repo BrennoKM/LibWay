@@ -4,6 +4,7 @@ import com.spring.libway.enums.TipoUsuario;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
@@ -17,18 +18,24 @@ public class Usuario {
     private String nome;
 
     @Column(unique = true)
+    @JsonIgnore
     private String email;
 
+    @JsonIgnore
     private String senha;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private TipoUsuario tipoUsuario;
 
+    @JsonIgnore
     private BigDecimal saldo = BigDecimal.ZERO;
 
     @Column(unique = true)
+    @JsonIgnore
     private String cpf;
 
     @Column(unique = true)
+    @JsonIgnore
     private String cnpj;
 }
