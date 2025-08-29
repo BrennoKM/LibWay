@@ -12,4 +12,6 @@ public interface CatalogoLocadorService {
 
     List<CatalogoLocador> listarItensDisponiveisParaAluguel();
 
+    void atualizarItemCatalogo(Long id, Integer estoque, BigDecimal valorAluguel);
+
 }

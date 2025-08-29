@@ -3,8 +3,10 @@ package com.spring.libway.controller;
 import com.spring.libway.model.CatalogoLocador;
 import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Obra;
+import com.spring.libway.model.Usuario;
 import com.spring.libway.service.CatalogoLocadorService;
 import com.spring.libway.service.LocacaoService;
+import com.spring.libway.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,8 +29,13 @@ public class LocadorController {
     @Autowired
     private LocacaoService locacaoService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @GetMapping("/home")
     public String mostrarHomeLocador(Model model) {
+        Usuario locador = usuarioService.getUsuarioLogado();
+        model.addAttribute("locador", locador);
         List<CatalogoLocador> catalogoPessoal = catalogoLocadorService.listarCatalogoDoLocadorLogado();
         model.addAttribute("catalogoPessoal", catalogoPessoal);
         model.addAttribute("obra", new Obra());
@@ -61,6 +68,16 @@ public class LocadorController {
         model.addAttribute("locacoesFinalizadas", locacoesFinalizadas);
 
         return "locador/painel";
+    }
+
+    @PostMapping("/catalogo/alterar")
+    public String alterarItemCatalogo(
+            @RequestParam("id") Long id,
+            @RequestParam("estoque") Integer estoque,
+            @RequestParam("valorAluguel") BigDecimal valorAluguel) {
+
+        catalogoLocadorService.atualizarItemCatalogo(id, estoque, valorAluguel);
+        return "redirect:/locador/home";
     }
 
 }

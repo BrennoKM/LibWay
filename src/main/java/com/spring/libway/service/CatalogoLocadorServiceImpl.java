@@ -59,4 +59,16 @@ public class CatalogoLocadorServiceImpl extends BaseService implements CatalogoL
     public List<CatalogoLocador> listarItensDisponiveisParaAluguel() {
         return catalogoRepository.findByEstoqueGreaterThan(0);
     }
+
+    @Override
+    public void atualizarItemCatalogo(Long id, Integer estoque, BigDecimal valorAluguel) {
+        CatalogoLocador item = catalogoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item de catálogo não encontrado."));
+
+        item.setEstoque(estoque);
+        item.setValorAluguel(valorAluguel);
+
+        catalogoRepository.save(item);
+    }
+
 }
