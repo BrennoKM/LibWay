@@ -1,6 +1,7 @@
 package com.spring.libway.controller;
 
 import com.spring.libway.enums.StatusLocacao;
+import com.spring.libway.model.Deposito;
 import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.service.LocacaoService;
@@ -89,6 +90,13 @@ public class ClienteController {
             redirectAttributes.addFlashAttribute("errorMessage", "Erro na devolução: " + e.getMessage());
         }
         return "redirect:/cliente/home";
+    }
+
+    @GetMapping("historico/depositos")
+    public String mostrarHistoricoDepositos(Model model) {
+        List<Deposito> depositos = usuarioService.listarDepositosDoClienteLogado();
+        model.addAttribute("depositos", depositos);
+        return "cliente/historico-depositos";
     }
 
 }

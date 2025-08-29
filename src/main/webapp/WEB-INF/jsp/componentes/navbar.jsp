@@ -23,6 +23,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/cliente/vitrine">Ver Vitrine</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cliente/historico/depositos">Histórico de Depósitos</a>
+                    </li>
                 </sec:authorize>
             </ul>
 

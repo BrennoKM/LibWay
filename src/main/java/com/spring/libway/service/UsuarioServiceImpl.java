@@ -1,7 +1,9 @@
 package com.spring.libway.service;
 
 import com.spring.libway.enums.TipoUsuario;
+import com.spring.libway.model.Deposito;
 import com.spring.libway.model.Usuario;
+import com.spring.libway.repository.DepositoRepository;
 import com.spring.libway.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +22,9 @@ public class UsuarioServiceImpl extends BaseService implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private DepositoRepository depositoRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -69,4 +75,8 @@ public class UsuarioServiceImpl extends BaseService implements UsuarioService {
         }
     }
 
+    public List<Deposito> listarDepositosDoClienteLogado() {
+        Usuario cliente = getUsuarioLogado();
+        return depositoRepository.findByUsuarioOrderByDataDepositoDesc(cliente);
+    }
 }
