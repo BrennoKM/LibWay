@@ -12,6 +12,10 @@ public interface LocacaoService {
 
     List<Locacao> listarLocacoesFinalizadasDoClienteLogado();
 
+    List<Locacao> listarLocacoesAtivasDoLocadorLogado();
+
+    List<Locacao> listarLocacoesFinalizadasDoLocadorLogado();
+
     void realizarLocacao(Long catalogoId);
 
     Locacao buscarPorIdDoClienteLogado(Long id);

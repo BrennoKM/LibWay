@@ -17,6 +17,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/obras/lista">Catálogo Global</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/locador/painel">Painel de Locações</a>
+                    </li>
                 </sec:authorize>
 
                 <sec:authorize access="hasRole('CLIENTE')">

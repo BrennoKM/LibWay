@@ -1,8 +1,10 @@
 package com.spring.libway.controller;
 
 import com.spring.libway.model.CatalogoLocador;
+import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Obra;
 import com.spring.libway.service.CatalogoLocadorService;
+import com.spring.libway.service.LocacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,9 @@ public class LocadorController {
 
     @Autowired
     private CatalogoLocadorService catalogoLocadorService;
+
+    @Autowired
+    private LocacaoService locacaoService;
 
     @GetMapping("/home")
     public String mostrarHomeLocador(Model model) {
@@ -46,4 +51,16 @@ public class LocadorController {
 
         return "redirect:/obras/lista";
     }
+
+    @GetMapping("/painel")
+    public String mostrarPainelLocador(Model model) {
+        List<Locacao> locacoesAtivas = locacaoService.listarLocacoesAtivasDoLocadorLogado();
+        List<Locacao> locacoesFinalizadas = locacaoService.listarLocacoesFinalizadasDoLocadorLogado();
+
+        model.addAttribute("locacoesAtivas", locacoesAtivas);
+        model.addAttribute("locacoesFinalizadas", locacoesFinalizadas);
+
+        return "locador/painel";
+    }
+
 }

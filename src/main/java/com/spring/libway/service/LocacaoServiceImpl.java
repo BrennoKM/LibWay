@@ -1,6 +1,7 @@
 package com.spring.libway.service;
 
 import com.spring.libway.enums.StatusLocacao;
+import com.spring.libway.model.CatalogoLocador;
 import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.repository.LocacaoRepository;
@@ -20,6 +21,9 @@ public class LocacaoServiceImpl extends BaseService implements LocacaoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private CatalogoLocadorService catalogoLocadorService;
+
     @Override
     public List<Locacao> listarLocacoesAtivasDoClienteLogado() {
         Usuario cliente = getUsuarioLogado();
@@ -31,6 +35,18 @@ public class LocacaoServiceImpl extends BaseService implements LocacaoService {
     public List<Locacao> listarLocacoesFinalizadasDoClienteLogado() {
         Usuario cliente = getUsuarioLogado();
         return locacaoRepository.findByClienteAndStatusOrderByDataLocacaoDesc(cliente, StatusLocacao.FINALIZADA);
+    }
+
+    @Override
+    public List<Locacao> listarLocacoesAtivasDoLocadorLogado() {
+        List<CatalogoLocador> itensDeCatalogo = catalogoLocadorService.listarCatalogoDoLocadorLogado();
+        return locacaoRepository.findByItemCatalogoInAndStatusOrderByDataLocacaoDesc(itensDeCatalogo, StatusLocacao.ATIVA);
+    }
+
+    @Override
+    public List<Locacao> listarLocacoesFinalizadasDoLocadorLogado() {
+        List<CatalogoLocador> itensDeCatalogo = catalogoLocadorService.listarCatalogoDoLocadorLogado();
+        return locacaoRepository.findByItemCatalogoInAndStatusOrderByDataLocacaoDesc(itensDeCatalogo, StatusLocacao.FINALIZADA);
     }
 
     @Override
