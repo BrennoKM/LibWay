@@ -42,9 +42,19 @@ public class Locacao {
             return "";
         }
         ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
 
         return this.dataLocacao.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
+    }
+
+    public String getDataDevolucaoFormatada() {
+        if (this.dataDevolucao == null) {
+            return "";
+        }
+        ZoneId fusoHorarioBrasil = ZoneId.of("America/Sao_Paulo");
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
+
+        return this.dataDevolucao.atZoneSameInstant(fusoHorarioBrasil).format(formatador);
     }
 
     public BigDecimal getValorTotalAluguel() {

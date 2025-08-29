@@ -1,5 +1,6 @@
 package com.spring.libway.controller;
 
+import com.spring.libway.enums.StatusLocacao;
 import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Usuario;
 import com.spring.libway.service.LocacaoService;
@@ -32,9 +33,12 @@ public class ClienteController {
     @GetMapping("/home")
     public String mostrarHomeCliente(Model model) {
         Usuario cliente = usuarioService.getUsuarioLogado();
-        List<Locacao> locacoes = locacaoService.listarLocacoesDoClienteLogado();
+        List<Locacao> locacoesAtivas = locacaoService.listarLocacoesAtivasDoClienteLogado();
+        List<Locacao> locacoesFinalizadas = locacaoService.listarLocacoesFinalizadasDoClienteLogado();
+
         model.addAttribute("cliente", cliente);
-        model.addAttribute("locacoes", locacoes);
+        model.addAttribute("locacoes", locacoesAtivas); // Locações ativas
+        model.addAttribute("locacoesFinalizadas", locacoesFinalizadas); // Locações finalizadas
 
         return "cliente/home";
     }
@@ -64,6 +68,14 @@ public class ClienteController {
     @ResponseBody
     public Locacao getDetalhesLocacao(@PathVariable Long id) {
         Locacao locacao = locacaoService.buscarPorIdDoClienteLogado(id);
+
+        if (locacao.getStatus() == StatusLocacao.FINALIZADA) {
+            var obra = locacao.getItemCatalogo().getObra();
+            if (obra != null) {
+                obra.setSumario(null);
+                obra.setTextoCompleto(null);
+            }
+        }
 
         return locacao;
     }

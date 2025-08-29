@@ -1,5 +1,6 @@
 package com.spring.libway.repository;
 
+import com.spring.libway.enums.StatusLocacao;
 import com.spring.libway.model.Locacao;
 import com.spring.libway.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface LocacaoRepository extends JpaRepository<Locacao, Long> {
+
+    List<Locacao> findByClienteAndStatusOrderByDataLocacaoDesc(Usuario cliente, StatusLocacao status);
 
     List<Locacao> findByClienteOrderByDataLocacaoDesc(Usuario cliente);
 

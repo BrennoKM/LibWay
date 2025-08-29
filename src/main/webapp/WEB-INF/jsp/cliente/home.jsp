@@ -147,6 +147,43 @@
             </div>
         </div>
     </div>
+
+</div>
+
+<div class="container mt-5">
+    <hr>
+    <h4>Histórico de Aluguéis (Finalizados)</h4>
+    <c:choose>
+        <c:when test="${not empty locacoesFinalizadas}">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Livro</th>
+                        <th>Locador</th>
+                        <th>Data do Aluguel</th>
+                        <th>Data da Devolução</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach items="${locacoesFinalizadas}" var="locacao">
+                        <tr>
+                            <td>${locacao.itemCatalogo.obra.titulo}</td>
+                            <td>${locacao.itemCatalogo.locador.nome}</td>
+                            <td>${locacao.getDataLocacaoFormatada()}</td>
+                            <td>${locacao.getDataDevolucaoFormatada()}</td>
+                            <td><fmt:formatNumber value="${locacao.getValorTotalAluguel()}" type="currency"/></td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:when>
+        <c:otherwise>
+            <div class="alert alert-info">
+                Você ainda não possui aluguéis finalizados.
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
 
 <script>

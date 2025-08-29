@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface LocacaoService {
 
-    List<Locacao> listarLocacoesDoClienteLogado();
+    List<Locacao> listarLocacoesAtivasDoClienteLogado();
+
+    List<Locacao> listarLocacoesFinalizadasDoClienteLogado();
 
     void realizarLocacao(Long catalogoId);
 
