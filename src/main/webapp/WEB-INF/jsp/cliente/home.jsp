@@ -56,7 +56,7 @@
                         <td>
                             <button class="btn btn-sm btn-info btn-detalhes" data-locacao-id="${locacao.id}" data-bs-toggle="modal" data-bs-target="#modalDetalhesLocacao">Ver Detalhes</button>
                             <button class="btn btn-sm btn-success btn-ver-obra" data-locacao-id="${locacao.id}" data-bs-toggle="modal" data-bs-target="#modalDetalhesObra">Ver Obra</button>
-                            <button class="btn btn-sm btn-warning">Devolver</button>
+                            <button class="btn btn-sm btn-warning btn-devolver" data-locacao-id="${locacao.id}">Devolver</button>
                         </td>
                     </tr>
                 </c:forEach>
@@ -151,10 +151,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicialização e cache para os modais
         const modalDetalhesLocacao = new bootstrap.Modal(document.getElementById('modalDetalhesLocacao'));
         const modalDetalhesObra = new bootstrap.Modal(document.getElementById('modalDetalhesObra'));
         const locacoesCache = {};
 
+        // 1. Lógica para botões de Detalhes e Obra
         document.querySelectorAll('.btn-detalhes, .btn-ver-obra').forEach(button => {
             button.addEventListener('click', function() {
                 const locacaoId = this.getAttribute('data-locacao-id');
@@ -182,8 +184,36 @@
             });
         });
 
+        // 2. Lógica para o botão de Devolução
+        document.querySelectorAll('.btn-devolver').forEach(button => {
+            button.addEventListener('click', function() {
+                const locacaoId = this.getAttribute('data-locacao-id');
+                const confirmacao = confirm("Tem certeza que deseja devolver este livro?");
+
+                if (confirmacao) {
+                    fetch('/cliente/devolver/' + locacaoId, {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Livro devolvido com sucesso!');
+                            window.location.reload();
+                        } else {
+                            return response.text().then(errorMessage => {
+                                throw new Error(errorMessage);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro na devolução:', error);
+                        alert('Erro na devolução: ' + error.message);
+                    });
+                }
+            });
+        });
+
+        // Funções auxiliares
         function fillModals(locacao, isDetalhesBtn) {
-            // Preenche o modal de detalhes da Locação
             document.getElementById('detalhesLocador').textContent = locacao.itemCatalogo.locador.nome;
             document.getElementById('detalhesDataAluguel').textContent = locacao.dataLocacaoFormatada;
             document.getElementById('detalhesValorTotal').textContent = formatCurrency(locacao.valorTotalAluguel);
@@ -191,7 +221,6 @@
             document.getElementById('detalhesValorRestante').textContent = formatCurrency(locacao.valorRestante);
             document.getElementById('detalhesStatus').textContent = locacao.status;
 
-            // Preenche o modal de detalhes da Obra
             document.getElementById('tituloObra').textContent = locacao.itemCatalogo.obra.titulo;
             document.getElementById('autorObra').textContent = locacao.itemCatalogo.obra.autor;
             document.getElementById('editoraObra').textContent = locacao.itemCatalogo.obra.editora;

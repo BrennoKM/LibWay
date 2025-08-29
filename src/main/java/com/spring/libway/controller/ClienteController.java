@@ -5,6 +5,8 @@ import com.spring.libway.model.Usuario;
 import com.spring.libway.service.LocacaoService;
 import com.spring.libway.service.UsuarioService;
 import com.spring.libway.service.CatalogoLocadorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/cliente")
 public class ClienteController {
-
+    private static final Logger logger = LoggerFactory.getLogger(ClienteController.class);
     @Autowired
     private UsuarioService usuarioService;
 
@@ -64,6 +66,17 @@ public class ClienteController {
         Locacao locacao = locacaoService.buscarPorIdDoClienteLogado(id);
 
         return locacao;
+    }
+
+    @PostMapping("/devolver/{id}")
+    public String devolverLivro(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            locacaoService.devolverLivro(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Livro devolvido e locação finalizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Erro na devolução: " + e.getMessage());
+        }
+        return "redirect:/cliente/home";
     }
 
 }

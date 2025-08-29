@@ -20,4 +20,7 @@ public interface LocacaoRepository extends JpaRepository<Locacao, Long> {
 
     Optional<Locacao> findByIdAndCliente(Long id, Usuario cliente);
 
+    @Query(value = "SELECT devolver_locacao(:p_locacao_id)", nativeQuery = true)
+    String chamarFuncaoDevolverLocacao(@Param("p_locacao_id") Integer locacaoId);
+
 }

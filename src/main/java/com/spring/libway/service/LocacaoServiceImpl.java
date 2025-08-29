@@ -44,4 +44,19 @@ public class LocacaoServiceImpl extends BaseService implements LocacaoService {
 
         return locacao.orElse(null);
     }
+
+    @Override
+    public void devolverLivro(Long locacaoId) {
+        Locacao locacao = buscarPorIdDoClienteLogado(locacaoId);
+        if (locacao == null) {
+            throw new IllegalStateException("Locação não encontrada ou não pertence a este usuário.");
+        }
+
+        String resultado = locacaoRepository.chamarFuncaoDevolverLocacao(locacaoId.intValue());
+
+        if (!"Livro devolvido com sucesso!".equals(resultado)) {
+            throw new IllegalStateException(resultado);
+        }
+    }
+
 }

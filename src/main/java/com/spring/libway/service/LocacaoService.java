@@ -14,4 +14,6 @@ public interface LocacaoService {
 
     Locacao buscarPorIdDoClienteLogado(Long id);
 
+    void devolverLivro(Long locacaoId);
+
 }
