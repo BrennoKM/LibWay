@@ -20,7 +20,7 @@ services:
     networks:
       - postgres-network
     volumes:
-      - /home/bk/data/postgres:/var/lib/postgresql/data
+      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
 networks:
   postgres-network:
     driver: bridge
